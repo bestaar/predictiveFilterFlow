@@ -1,4 +1,4 @@
-# predictiveFilterFlow
+# using predictive filter flow for face2face warping
 I recently found out about an interesting technique called predictive filter flow (pFF), proposed by Shu Kong and Charless Fowlkes (https://arxiv.org/abs/1811.11482).
 The key idea is to learn input-dependent spatially varying filters, i.e. a different filter for each position of the input image. By using the softmax activation on the learned filters, pFF can e.g. be used to implement image warping: Instead of learning offsets for each position we directly learn to apply a weighted sum of the surrounding pixels: Much easier to implement and expand in my opinion.  The original paper covers denoising and image enhancement and a follow up paper discusses computing optical flow from videos (https://arxiv.org/abs/1904.01693).
 
