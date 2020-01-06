@@ -4,6 +4,9 @@ The key idea is to use Convolutional Neural Networks to learn input-dependent sp
 
 I thought pFF could make an interesting regularization for learning face swapping, i.e. turning the face of one person into the face of another: Instead of a classical encoder-decoder approach, the network can only move pixels of the input image in order to turn one face into the other. As an example I created a small data set of my face, taken with an old webcam and some images of Jackie Chan, because Jackie Chan is awesome. I used the excellent face_alignment library from Adrian Bulat (https://github.com/1adrianb/face-alignment) to find pairs with similar positioning to create a roughly aligned data set. The results are a bit blurry but translate amazingly well to novel face expressions as shown in the video below.
 
-![Alt text](fake.gif?raw=true "Final output")
+<p align="center">
+  <img width="460" height="300" src=fake.gif>
+</p>
+
 
 ![Alt text](output.png?raw=true "Final output")
