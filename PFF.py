@@ -9,7 +9,7 @@ import torch.nn.functional as F
 # - learn and apply individual filters (ksize x ksize) for each spatial position in the input
 # - i.e. when using softmax activation it is basically image warping, but instead of offsets, we learn filters
 class pFF(nn.Module):
-    def __init__(self,ni, ksize=3,stride=1,softmax = True,upsample=1):
+    def __init__(self,ni, ksize=3,dilation=1,softmax = True,upsample=1):
         super(pFF, self).__init__()
         # size of the learned filter: ksize x ksize
         self.ksize=ksize
@@ -21,7 +21,7 @@ class pFF(nn.Module):
         self.get_filter = nn.Conv2d(ni,ksize**2,3,padding=1,stride=upsample,padding_mode='reflect')
         self.pad = nn.ReflectionPad2d(padding=int((ksize-1)/2)*stride)
         # apply learned filters
-        self.uf1 = nn.Unfold(ksize, dilation=stride, padding=0, stride=1)
+        self.uf1 = nn.Unfold(ksize, dilation=dilation, padding=0, stride=1)
         self.uf2 = nn.Unfold(1, dilation=1, padding=0, stride=1)
         if upsample>1:
             self.us = nn.UpsamplingBilinear2d(scale_factor=upsample)
@@ -55,7 +55,7 @@ class pFF_channelwise(nn.Module):
     #   -> different filters for each channel can slow things down a lot
     #   to allow for some flexibility I implemented the option to split the channels into groups,
     #   each with their own deformation as a way to trade-off variety in deformations for performance
-    def __init__(self,ni, ksize=3,stride=1,softmax = True,groups=2,upsample=1):
+    def __init__(self,ni, ksize=3,dilation=1,softmax = True,groups=2,upsample=1):
         super(pFF_channelwise, self).__init__()
         # size of the learned filter: ksize x ksize
         self.ksize=ksize
@@ -71,9 +71,9 @@ class pFF_channelwise(nn.Module):
         self.groups = groups
         # train conv layer to output filter flow and use reflection padding
         self.get_filter = nn.Conv2d(ni,ksize**2*groups,3,padding=1,stride=upsample,padding_mode='reflect')
-        self.pad = nn.ReflectionPad2d(padding=int((ksize-1)/2)*stride)
+        self.pad = nn.ReflectionPad2d(padding=int((ksize-1)/2)*dilation)
         # apply learned filters
-        self.uf1 = nn.Unfold(ksize, dilation=stride, padding=0, stride=1)
+        self.uf1 = nn.Unfold(ksize, dilation=dilation, padding=0, stride=1)
         self.uf2 = nn.Unfold(1, dilation=1, padding=0, stride=1)
         if upsample>1:
             self.us = nn.UpsamplingBilinear2d(scale_factor=upsample)
