@@ -24,6 +24,11 @@ def gram_matrix(x):
 vgg_m = vgg16_bn(True).features.cuda().eval()
 requires_grad(vgg_m, False)
 blocks = [i-1 for i,o in enumerate(children(vgg_m)) if isinstance(o,nn.MaxPool2d)]
+
+# res_m = resnet50(True).cuda().eval()
+# requires_grad(res_m, False)
+# blocks = [i-1 for i,o in enumerate(children(res_m)) if (isinstance(o,nn.Conv2d) and o.stride[0]>1)]
+
 base_loss = F.mse_loss
 
 class FeatureLoss(nn.Module):
