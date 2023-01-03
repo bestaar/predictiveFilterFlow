@@ -19,7 +19,7 @@ class pFF(nn.Module):
         self.upsample = upsample
         # train conv layer to output filter flow and use reflection padding
         self.get_filter = nn.Conv2d(ni,ksize**2,3,padding=1,stride=upsample,padding_mode='reflect')
-        self.pad = nn.ReflectionPad2d(padding=int((ksize-1)/2)*stride)
+        self.pad = nn.ReflectionPad2d(padding=int((ksize-1)/2)*dilation)
         # apply learned filters
         self.uf1 = nn.Unfold(ksize, dilation=dilation, padding=0, stride=1)
         self.uf2 = nn.Unfold(1, dilation=1, padding=0, stride=1)
